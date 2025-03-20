@@ -13,7 +13,7 @@ const AboutMe = () => {
         {/* Profilo Professionale */}
         <div className="w-full md:w-1/2">
           <Accordion> 
-            <AccordionSummary sx={{ backgroundColor: "#646460ff", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)" }} expandIcon={<ExpandMoreIcon sx={{color:"white",}} />}>
+            <AccordionSummary sx={{ backgroundColor: "#646460ff", borderRadius:"4px", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)" }} expandIcon={<ExpandMoreIcon sx={{color:"white",}} />}>
               <Typography sx={{color:"white",}}>📌 Profilo Professionale</Typography>
             </AccordionSummary>
             <AccordionDetails sx={{backgroundColor: "#646460ff"}}>
@@ -31,7 +31,7 @@ const AboutMe = () => {
         {/* La Mia Persona */}
         <div className="w-full md:w-1/2">
           <Accordion>
-            <AccordionSummary sx={{backgroundColor: "#646460ff",  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)"}} expandIcon={<ExpandMoreIcon sx={{color:"white",}} />}>
+            <AccordionSummary sx={{backgroundColor: "#646460ff", borderRadius:"4px",  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)"}} expandIcon={<ExpandMoreIcon sx={{color:"white",}} />}>
               <Typography sx={{color:"white",}}>😊 La Mia Persona</Typography>
             </AccordionSummary>
             <AccordionDetails sx={{backgroundColor: "#646460ff",}}>
