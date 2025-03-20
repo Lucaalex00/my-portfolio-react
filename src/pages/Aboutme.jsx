@@ -13,11 +13,11 @@ const AboutMe = () => {
         {/* Profilo Professionale */}
         <div className="w-full md:w-1/2">
           <Accordion> 
-            <AccordionSummary sx={{backgroundColor: "#646460ff", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)"}} expandIcon={<ExpandMoreIcon />}>
-              <Typography>📌 Profilo Professionale</Typography>
+            <AccordionSummary sx={{ backgroundColor: "#646460ff", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)" }} expandIcon={<ExpandMoreIcon sx={{color:"white",}} />}>
+              <Typography sx={{color:"white",}}>📌 Profilo Professionale</Typography>
             </AccordionSummary>
             <AccordionDetails sx={{backgroundColor: "#646460ff"}}>
-              <Typography sx={{backgroundColor: "#646460ff",fontFamily:"Gidole"}}>
+              <Typography sx={{backgroundColor: "#646460ff", color:"white", fontFamily:"Gidole"}}>
                 Sono uno sviluppatore web specializzato in tecnologie moderne che cerca di aggiornarsi sempre per non rimanere indietro.
                 Lavoro nel settore da diversi anni
                 creando soluzioni web dinamiche e interattive.
@@ -31,11 +31,11 @@ const AboutMe = () => {
         {/* La Mia Persona */}
         <div className="w-full md:w-1/2">
           <Accordion>
-            <AccordionSummary sx={{backgroundColor: "#646460ff", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)"}} expandIcon={<ExpandMoreIcon />}>
-              <Typography>😊 La Mia Persona</Typography>
+            <AccordionSummary sx={{backgroundColor: "#646460ff",  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)"}} expandIcon={<ExpandMoreIcon sx={{color:"white",}} />}>
+              <Typography sx={{color:"white",}}>😊 La Mia Persona</Typography>
             </AccordionSummary>
-            <AccordionDetails sx={{backgroundColor: "#646460ff"}}>
-              <Typography sx={{backgroundColor: "#646460ff", fontFamily:"Gidole"}}>
+            <AccordionDetails sx={{backgroundColor: "#646460ff",}}>
+              <Typography sx={{backgroundColor: "#646460ff", color:"white", fontFamily:"Gidole"}}>
                 Oltre alla programmazione, mi piace viaggiare, ascoltare musica
                 e scoprire nuove tecnologie.
                 Sono una persona curiosa e adoro mettermi alla prova in tutti i campi, che siano sport, hobby oppure sfide personali.
