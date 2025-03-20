@@ -90,7 +90,7 @@ const EmailJSComponent = () => {
       {!isConfirmed ? (
         <form onSubmit={sendConfirmationEmail} className="space-y-4">
           <div>
-            <label className="block text-gray-700">Name</label>
+            <label className="block text-gray-300">Name</label>
             <input
               type="text"
               name="from_name"
@@ -100,7 +100,7 @@ const EmailJSComponent = () => {
             />
           </div>
           <div>
-            <label className="block text-gray-700">Email</label>
+            <label className="block text-gray-300">Email</label>
             <input
               type="email"
               name="user_email"
@@ -119,7 +119,7 @@ const EmailJSComponent = () => {
       ) : (
         <form ref={form} onSubmit={sendEmail} className="space-y-4">
           <div>
-            <label className="block text-gray-700">Message</label>
+            <label className="block text-gray-300">Message</label>
             <textarea
               name="message"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
@@ -141,7 +141,7 @@ const EmailJSComponent = () => {
 
       {!isConfirmed && (
         <div className="mt-4">
-          <label className="block text-gray-700">Confirmation Code</label>
+          <label className="block text-gray-300">Confirmation Code</label>
           <input
             type="text"
             value={userCode}

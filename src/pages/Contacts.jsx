@@ -40,7 +40,7 @@ const ContactPage = () => {
                 alt="LinkedIn logo"
                 style={{ width: "50px", height: "50px" }}
               />
-              <Typography variant="h6" sx={{ mt: 2 }}>
+              <Typography variant="h6" sx={{ mt: 2,fontFamily:"Gidole" }}>
                 LinkedIn
               </Typography>
               <Typography variant="body2">@Luca Cirio</Typography>
@@ -78,7 +78,7 @@ const ContactPage = () => {
                 alt="GitHub logo"
                 style={{ width: "50px", height: "50px" }}
               />
-              <Typography variant="h6" sx={{ mt: 2 }}>
+              <Typography variant="h6" sx={{ mt: 2,fontFamily:"Gidole" }}>
                 GitHub
               </Typography>
               <Typography variant="body2">@Lucaalex00</Typography>
@@ -116,7 +116,7 @@ const ContactPage = () => {
                 alt="Instagram logo"
                 style={{ width: "50px", height: "50px" }}
               />
-              <Typography variant="h6" sx={{ mt: 2 }}>
+              <Typography variant="h6" sx={{ mt: 2,fontFamily:"Gidole" }}>
                 Instagram
               </Typography>
               <Typography variant="body2">@Luca.alex_</Typography>
@@ -154,7 +154,7 @@ const ContactPage = () => {
                 alt="PDF logo"
                 style={{ width: "50px", height: "50px" }}
               />
-              <Typography variant="h6" sx={{ mt: 2 }}>
+              <Typography variant="h6" sx={{ mt: 2,fontFamily:"Gidole" }}>
                 Download CV
               </Typography>
               <Typography variant="body2">Curriculum Vitae</Typography>

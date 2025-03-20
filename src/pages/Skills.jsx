@@ -28,14 +28,13 @@ const Skills = () => {
           <Grid item key={index} xs={12} sm={6} md={3}>
             <Card 
               sx={{ 
-                backgroundColor: "#ffffff50", 
+                backgroundColor: "#646460aa", 
                 color: "#fff", 
                 borderRadius: "8px", 
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)", 
                 transition: "transform 0.3s ease-in-out", 
                 "&:hover": { 
                   transform: "scale(1.05)", 
-                  boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)" 
+                  boxShadow: "0 8px 16px rgba(0, 0, 0, 0.7)" 
                 } 
               }}
             >
@@ -43,12 +42,12 @@ const Skills = () => {
                 <img 
                   src={`/img/${skill.logo}`} 
                   alt={skill.name} 
-                  style={{ width: "80px", height: "60px", marginBottom: "12px" }} 
+                  style={{ width: "80px", height: "60px", marginBottom: "12px", margin:"auto" }} 
                 />
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h5" sx={{fontFamily:"Gidole"}} gutterBottom>
                   {skill.name}
                 </Typography>
-                <Typography variant="caption" display="block" sx={{ color:"white", marginTop: "10px", opacity:"0.7"}}>
+                <Typography variant="caption" display="block" sx={{ color:"white", marginTop: "10px", opacity:"0.7",fontFamily:"Gidole"}}>
                   {new Date(skill.startDate).toLocaleDateString("it-IT", { year: "numeric", month: "long" }).replace(/^\w/, (c) => c.toUpperCase())}
                 </Typography>
 

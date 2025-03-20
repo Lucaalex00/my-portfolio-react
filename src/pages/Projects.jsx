@@ -8,7 +8,7 @@ const GITHUB_TOKEN = import.meta.env.VITE_SECRET_GITHUB_KEY; // Sostituisci con 
 const SELECTED_REPOS = [
   "montanarosrls-shop",
   "Swords-and-Beers",
-  "react_portfolio",
+  "my-portfolio-react",
   "laravel-dc-comics",
 ];
 
@@ -60,14 +60,14 @@ const Projects = () => {
             <Grid item key={index} xs={12} sm={6} md={6}>
               <Card
                 sx={{
-                  backgroundColor: "#ffffff50",
+                  backgroundColor: "#646460aa",
                   color: "#fff",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between", // Mantieni il contenuto distribuito verticalmente
                   height: "100%", // Card con altezza uguale
                   transition: "transform 0.3s ease-in-out",
-                  "&:hover": { transform: "scale(1.05)" },
+                  "&:hover": { transform: "scale(1.05)", boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9)" },
                 }}
               >
                 <CardContent
@@ -79,10 +79,10 @@ const Projects = () => {
                     padding: "20px", // Padding extra per un miglior aspetto
                   }}
                 >
-                  <Typography variant="h6" sx={{ marginBottom: "10px" }}>
+                  <Typography variant="h6" sx={{ marginBottom: "10px",fontFamily:"Gidole" }}>
                     {project.name}
                   </Typography>
-                  <Typography variant="body2" sx={{ marginBottom: "10px", flex: 1 }}>
+                  <Typography variant="body2" sx={{ marginBottom: "10px", flex: 1, fontFamily:"Gidole" }}>
                     {project.description || "Nessuna descrizione disponibile."}
                   </Typography>
                   <Button
@@ -95,7 +95,7 @@ const Projects = () => {
                   >
                     Scopri di più
                   </Button>
-                  <Typography variant="caption" display="block" sx={{ marginTop: "10px", opacity: 0.7 }}>
+                  <Typography variant="caption" display="block" sx={{ marginTop: "10px", opacity: 0.7, fontFamily:"Gidole" }}>
                     Ultimo aggiornamento: {new Date(project.updated_at).toLocaleDateString()}
                   </Typography>
                 </CardContent>

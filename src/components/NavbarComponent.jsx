@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const NavbarComponent = () => {
   const [isOpen, setIsOpen] = useState(false); // Stato per aprire/chiudere il menu
   const [isScrolled, setIsScrolled] = useState(false); // Stato per rilevare se l'utente ha scrollato
+  const menuRef = useRef(null); // Riferimento per il menu
 
   // Funzione per aprire/chiudere il menu
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prevState) => !prevState);
   };
 
   // Funzione per lo scroll fluido
@@ -24,8 +25,13 @@ const NavbarComponent = () => {
       if (window.scrollY > 1) {
         setIsScrolled(true); // Navbar si nasconde quando scorre più di 1px
       } else {
-          setIsScrolled(false); // Navbar è visibile in cima
-          setIsOpen(false)
+        setIsScrolled(false); // Navbar è visibile in cima
+        setIsOpen(false); // Chiude il menu quando torna in cima
+      }
+
+      // Chiudiamo il menu su dispositivi mobili se l'utente scrolla
+      if (isOpen && window.innerWidth <= 768) {
+        setIsOpen(false); // Chiudi il menu quando scrolli sul dispositivo mobile
       }
     };
 
@@ -33,6 +39,23 @@ const NavbarComponent = () => {
 
     // Pulizia dell'evento quando il componente è smontato
     return () => window.removeEventListener("scroll", handleScrollEvent);
+  }, [isOpen]);
+
+  // Funzione per chiudere il menu quando si clicca fuori
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsOpen(false); // Chiude il menu se il click è fuori
+    }
+  };
+
+  // Aggiungiamo il listener per il click fuori dal menu
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Pulizia del listener quando il componente viene smontato
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   return (
@@ -41,8 +64,8 @@ const NavbarComponent = () => {
         !isScrolled
           ? "bg-gray-800 text-white opacity-80 w-full z-10 fixed top-0 left-0 right-0 transition-all duration-300"
           : "bg-transparent text-white w-full z-10 fixed top-0 left-0 right-0 transition-all duration-300"
-              }`}
-              >
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* LOGO */}
@@ -58,16 +81,16 @@ const NavbarComponent = () => {
           {/* MENU DESKTOP (visibile solo quando non è scrollato) */}
           {!isScrolled && (
             <div className="hidden md:flex space-x-6">
-              <button onClick={() => handleScroll("aboutme")} className="cursor-pointer hover:text-gray-300">
+              <button onClick={() => handleScroll("aboutme")} className="cursor-pointer hover:text-gray-600 duration-500">
                 About Me
               </button>
-              <button onClick={() => handleScroll("skills")} className="cursor-pointer hover:text-gray-300">
+              <button onClick={() => handleScroll("skills")} className="cursor-pointer hover:text-gray-600 duration-500">
                 Skills
               </button>
-              <button onClick={() => handleScroll("projects")} className="cursor-pointer hover:text-gray-300">
+              <button onClick={() => handleScroll("projects")} className="cursor-pointer hover:text-gray-600 duration-500">
                 Projects
               </button>
-              <button onClick={() => handleScroll("contacts")} className="cursor-pointer hover:text-gray-300">
+              <button onClick={() => handleScroll("contacts")} className="cursor-pointer hover:text-gray-600 duration-500">
                 Contacts
               </button>
             </div>
@@ -108,26 +131,48 @@ const NavbarComponent = () => {
       </div>
 
       {/* MENU SCROLL (Quando isOpen è true) */}
-      { isOpen && (
-        <div
-          className="absolute top-16 right-4 bg-gray-900 text-white rounded-lg w-48"
+      <div
+        ref={menuRef} // Riferimento al menu per il click fuori
+        className={`fixed top-0 left-0 w-full min-h-1/4 py-3 bg-gray-900 text-white flex flex-col items-center justify-center transform transition-all duration-500 ease-in-out ${
+          isOpen
+            ? "translate-y-0 opacity-90"
+            : "-translate-y-full opacity-0"
+        }`}
+      >
+        <button
+          onClick={toggleMenu}
+          className="absolute top-6 right-6 text-white text-2xl"
         >
-          <div className="flex flex-col items-center space-y-2 py-4">
-            <button onClick={() => handleScroll("aboutme")} className="cursor-pointer block px-4 py-2 hover:bg-gray-800">
-              About Me
-            </button>
-            <button onClick={() => handleScroll("skills")} className="cursor-pointer block px-4 py-2 hover:bg-gray-800">
-              Skills
-            </button>
-            <button onClick={() => handleScroll("projects")} className="cursor-pointer block px-4 py-2 hover:bg-gray-800">
-              Projects
-            </button>
-            <button onClick={() => handleScroll("contacts")} className="cursor-pointer block px-4 py-2 hover:bg-gray-800">
-              Contacts
-            </button>
-          </div>
+          ✕
+        </button>
+
+        <div className="flex flex-col space-y-6 text-xl">
+          <button
+            onClick={() => handleScroll("aboutme")}
+            className="cursor-pointer hover:text-gray-600 duration-500"
+          >
+            About Me
+          </button>
+          <button
+            onClick={() => handleScroll("skills")}
+            className="cursor-pointer hover:text-gray-600 duration-500"
+          >
+            Skills
+          </button>
+          <button
+            onClick={() => handleScroll("projects")}
+            className="cursor-pointer hover:text-gray-600 duration-500"
+          >
+            Projects
+          </button>
+          <button
+            onClick={() => handleScroll("contacts")}
+            className="cursor-pointer hover:text-gray-600 duration-500"
+          >
+            Contacts
+          </button>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
