@@ -139,13 +139,6 @@ const NavbarComponent = () => {
             : "-translate-y-full opacity-0"
         }`}
       >
-        <button
-          onClick={toggleMenu}
-          className="absolute top-6 right-6 text-white text-2xl"
-        >
-          ✕
-        </button>
-
         <div className="flex flex-col space-y-6 text-xl">
           <button
             onClick={() => handleScroll("aboutme")}
