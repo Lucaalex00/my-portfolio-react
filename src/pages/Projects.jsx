@@ -9,7 +9,7 @@ const SELECTED_REPOS = [
   "montanarosrls-shop",
   "Swords-and-Beers",
   "my-portfolio-react",
-  "laravel-dc-comics",
+  "gamesandtoys-website",
 ];
 
 const Projects = () => {
@@ -88,7 +88,7 @@ const Projects = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href={project.html_url}
+                    href={project.projectshtml_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     sx={{ alignSelf: "flex-center", width:"50%", m:"auto" }}
