@@ -1,70 +1,96 @@
 import React, { useState, useEffect } from "react";
-// eslint-disable-next-line no-unused-vars
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 const greetings = [
   "Hi, I'm Luca Cirio",
   "Welcome to my digital space!",
   "Crafting code, building dreams.",
   "Code. Create. Innovate.",
-  "Turning ideas into reality.",
-  "Hey there! I'm Luca Cirio",
-  "Let's build something amazing!",
-  "Bringing ideas to life with code."
 ];
 
+const TYPING_SPEED = 90;
+const DELETING_SPEED = 45;
+const PAUSE_TIME = 1400;
+
 const Hero = () => {
+  const shouldReduceMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
+    if (shouldReduceMotion) {
+      setDisplayedText(greetings[0]);
+      return;
+    }
+
+    const currentText = greetings[index];
     let timeout;
 
-    if (isDeleting) {
+    if (!isDeleting && displayedText.length < currentText.length) {
       timeout = setTimeout(() => {
-        setDisplayedText((prev) => prev.slice(0, -1));
-        if (displayedText === "") {
-          setIsDeleting(false);
-          setIndex((prevIndex) => (prevIndex + 1) % greetings.length);
-        }
-      }, 50);
-    } else {
+        setDisplayedText(currentText.slice(0, displayedText.length + 1));
+      }, TYPING_SPEED);
+    } else if (!isDeleting && displayedText === currentText) {
       timeout = setTimeout(() => {
-        setDisplayedText((prev) => greetings[index].slice(0, prev.length + 1));
-        if (displayedText === greetings[index]) {
-          setTimeout(() => setIsDeleting(true), 1500);
-        }
-      }, 100);
+        setIsDeleting(true);
+      }, PAUSE_TIME);
+    } else if (isDeleting && displayedText.length > 0) {
+      timeout = setTimeout(() => {
+        setDisplayedText(displayedText.slice(0, -1));
+      }, DELETING_SPEED);
+    } else if (isDeleting && displayedText.length === 0) {
+      setIsDeleting(false);
+      setIndex((prev) => (prev + 1) % greetings.length);
     }
 
     return () => clearTimeout(timeout);
-  }, [displayedText, isDeleting, index]);
+  }, [displayedText, isDeleting, index, shouldReduceMotion]);
 
   return (
-    <div>
-      <section
-        id="hero"
-        className="h-screen flex flex-col justify-center items-center text-center relative z-1"
-      >
-        <div className="relative w-full max-w-[800px] h-[100px] flex items-center justify-center overflow-hidden border-b-2 border-white mb-5">
+    <section
+      id="hero"
+      className="relative z-10 min-h-[100dvh] flex flex-col justify-center items-center text-center px-6"
+    >
+      <div className="relative w-full max-w-[850px] min-h-[120px] flex items-center justify-center overflow-hidden border-b border-white/30 mb-6">
+        {!shouldReduceMotion && (
           <motion.div
+            key={index}
             initial={{ x: "-100%" }}
             animate={{ x: "100%" }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
-            key={index}
-            className="absolute bg-white h-full w-full"
-          ></motion.div>
-          <h1 className="text-2xl md:text-3xl mb-4 font-mono relative z-10">
-            {displayedText}
-            <span className="animate-blink">|</span>
-          </h1>
-        </div>
-        <p className="text-lg md:text-2xl opacity-80 font-[Gidole]">
-          Software Web Developer | Front-end & Back-end
-        </p>
-      </section>
-    </div>
+            className="absolute inset-0 bg-white/10"
+          />
+        )}
+
+        <h1 className="relative z-10 text-2xl sm:text-3xl md:text-5xl font-mono tracking-tight">
+          {displayedText}
+          {!shouldReduceMotion && (
+            <span className="inline-block ml-1 animate-pulse">|</span>
+          )}
+        </h1>
+      </div>
+
+      <p className="text-base sm:text-lg md:text-2xl text-white/80 max-w-[700px]">
+        Software Web Developer | Front-end & Back-end
+      </p>
+
+      <div className="mt-8 flex flex-wrap justify-center gap-4">
+        <a
+          href="#projects"
+          className="px-5 py-2.5 rounded-full border border-white text-white hover:bg-white hover:text-black transition duration-300"
+        >
+          View Projects
+        </a>
+
+        <a
+          href="#contacts"
+          className="px-5 py-2.5 rounded-full border border-white/40 text-white hover:border-white transition duration-300"
+        >
+          Contact Me
+        </a>
+      </div>
+    </section>
   );
 };
 

@@ -8,18 +8,18 @@ import NavbarComponent from "./components/NavbarComponent";
 
 function AppWrapper() {
   const location = useLocation();
-  const isCrashPage = location.pathname === "/system-crash";
+  const isHomePage = location.pathname === "/";
 
   return (
     <>
-      {!isCrashPage && <NavbarComponent />}
+      {isHomePage && <NavbarComponent />}
       
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/system-crash" element={<HackerTerminal />} />
+        <Route path="*" element={<HackerTerminal />} />
       </Routes>
 
-      {!isCrashPage && <FooterComponent />}
+      {!isHomePage && <FooterComponent />}
     </>
   );
 }

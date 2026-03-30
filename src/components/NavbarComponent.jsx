@@ -1,58 +1,48 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const NavbarComponent = () => {
-  const [isOpen, setIsOpen] = useState(false); // Stato per aprire/chiudere il menu
-  const [isScrolled, setIsScrolled] = useState(false); // Stato per rilevare se l'utente ha scrollato
-  const menuRef = useRef(null); // Riferimento per il menu
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const menuRef = useRef(null);
 
-  // Funzione per aprire/chiudere il menu
   const toggleMenu = () => {
     setIsOpen((prevState) => !prevState);
   };
 
-  // Funzione per lo scroll fluido
   const handleScroll = (id) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-    setIsOpen(false); // Chiude il menu mobile dopo il click
+    setIsOpen(false);
   };
 
-  // Monitorare lo scroll
   useEffect(() => {
     const handleScrollEvent = () => {
       if (window.scrollY > 1) {
-        setIsScrolled(true); // Navbar si nasconde quando scorre più di 1px
+        setIsScrolled(true);
       } else {
-        setIsScrolled(false); // Navbar è visibile in cima
-        setIsOpen(false); // Chiude il menu quando torna in cima
+        setIsScrolled(false);
+        setIsOpen(false);
       }
 
-      // Chiudiamo il menu su dispositivi mobili se l'utente scrolla
       if (isOpen && window.innerWidth <= 768) {
-        setIsOpen(false); // Chiudi il menu quando scrolli sul dispositivo mobile
+        setIsOpen(false);
       }
     };
 
     window.addEventListener("scroll", handleScrollEvent);
-
-    // Pulizia dell'evento quando il componente è smontato
     return () => window.removeEventListener("scroll", handleScrollEvent);
   }, [isOpen]);
 
-  // Funzione per chiudere il menu quando si clicca fuori
   const handleClickOutside = (event) => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
-      setIsOpen(false); // Chiude il menu se il click è fuori
+      setIsOpen(false);
     }
   };
 
-  // Aggiungiamo il listener per il click fuori dal menu
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-
-    // Pulizia del listener quando il componente viene smontato
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -60,50 +50,48 @@ const NavbarComponent = () => {
 
   return (
     <nav
-      className={`${
+      className={`fixed top-0 left-0 right-0 z-20 transition-all duration-500 ${
         !isScrolled
-          ? "bg-gray-800 text-white opacity-80 w-full z-10 fixed top-0 left-0 right-0 transition-all duration-300"
-          : "bg-transparent text-white w-full z-10 fixed top-0 left-0 right-0 transition-all duration-300"
+          ? "bg-black/45 backdrop-blur-md border-b border-white/10 text-white"
+          : "bg-transparent text-white"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+        <div className="flex justify-between items-center h-20">
           {/* LOGO */}
           {!isScrolled && (
             <a
               onClick={() => handleScroll("hero")}
-              className="text-xl hover:text-gray-400 duration-500 font-bold cursor-pointer"
+              className="text-xl md:text-2xl font-semibold tracking-wide cursor-pointer text-white hover:text-white/70 transition duration-300 select-none"
             >
               Luca Cirio
             </a>
           )}
 
-          {/* MENU DESKTOP (visibile solo quando non è scrollato) */}
+          {/* MENU DESKTOP */}
           {!isScrolled && (
-            <div className="hidden md:flex space-x-6">
-              <button onClick={() => handleScroll("aboutme")} className="cursor-pointer hover:text-gray-600 duration-500">
-                About Me
-              </button>
-              <button onClick={() => handleScroll("skills")} className="cursor-pointer hover:text-gray-600 duration-500">
-                Skills
-              </button>
-              <button onClick={() => handleScroll("projects")} className="cursor-pointer hover:text-gray-600 duration-500">
-                Projects
-              </button>
-              <button onClick={() => handleScroll("contacts")} className="cursor-pointer hover:text-gray-600 duration-500">
-                Contacts
-              </button>
+            <div className="hidden md:flex items-center space-x-2">
+              {["aboutme", "skills", "projects", "contacts"].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => handleScroll(item)}
+                  className="px-4 py-2 rounded-full text-sm tracking-wide text-white/85 hover:text-white hover:bg-white/8 border border-transparent hover:border-white/10 transition-all duration-300"
+                >
+                  {item === "aboutme"
+                    ? "About Me"
+                    : item.charAt(0).toUpperCase() + item.slice(1)}
+                </button>
+              ))}
             </div>
           )}
 
-          {/* HAMBURGER BUTTON - VISIBLE SOLO CON SCROLL */}
+          {/* HAMBURGER */}
           <div className={`${isScrolled ? "absolute right-4 top-4" : "hidden"}`}>
             <button
               onClick={toggleMenu}
-              className="bg-gray-800 text-white p-2 rounded-full cursor-pointer focus:outline-none"
+              className="bg-black/55 backdrop-blur-md border border-white/10 text-white p-3 rounded-full cursor-pointer focus:outline-none shadow-[0_8px_30px_rgba(0,0,0,0.35)] hover:bg-black/70 hover:scale-105 transition-all duration-300"
             >
               {isOpen ? (
-                // Icona di chiusura (X)
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -114,7 +102,6 @@ const NavbarComponent = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                // Icona hamburger
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -130,37 +117,35 @@ const NavbarComponent = () => {
         </div>
       </div>
 
-      {/* MENU SCROLL (Quando isOpen è true) */}
+      {/* MENU OVERLAY */}
       <div
-        ref={menuRef} // Riferimento al menu per il click fuori
-        className={`fixed top-0 left-0 w-full min-h-1/4 py-3 bg-gray-900 text-white flex flex-col items-center justify-center transform transition-all duration-500 ease-in-out ${
-          isOpen
-            ? "translate-y-0 opacity-90"
-            : "-translate-y-full opacity-0"
+        ref={menuRef}
+        className={`fixed top-0 left-0 w-full min-h-[38vh] bg-black/88 backdrop-blur-xl border-b border-white/10 text-white flex flex-col items-center justify-center transform transition-all duration-500 ease-in-out ${
+          isOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         }`}
       >
-        <div className="flex flex-col space-y-6 text-xl">
+        <div className="flex flex-col items-center space-y-5 text-xl">
           <button
             onClick={() => handleScroll("aboutme")}
-            className="cursor-pointer hover:text-gray-600 duration-500"
+            className="px-6 py-2 rounded-full text-white/85 hover:text-white hover:bg-white/8 transition-all duration-300"
           >
             About Me
           </button>
           <button
             onClick={() => handleScroll("skills")}
-            className="cursor-pointer hover:text-gray-600 duration-500"
+            className="px-6 py-2 rounded-full text-white/85 hover:text-white hover:bg-white/8 transition-all duration-300"
           >
             Skills
           </button>
           <button
             onClick={() => handleScroll("projects")}
-            className="cursor-pointer hover:text-gray-600 duration-500"
+            className="px-6 py-2 rounded-full text-white/85 hover:text-white hover:bg-white/8 transition-all duration-300"
           >
             Projects
           </button>
           <button
             onClick={() => handleScroll("contacts")}
-            className="cursor-pointer hover:text-gray-600 duration-500"
+            className="px-6 py-2 rounded-full text-white/85 hover:text-white hover:bg-white/8 transition-all duration-300"
           >
             Contacts
           </button>

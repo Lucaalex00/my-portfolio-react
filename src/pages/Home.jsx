@@ -8,35 +8,26 @@ import Contacts from "./Contacts";
 
 const Home = () => {
   return (
-    <div className="relative w-full h-full bg-black text-white overflow-auto">
-      {/* Background con particelle più piccole */}
-      <ParticlesBg
-        type="cobweb"
-        bg={true}
-        color="#ffffff"
-        num={120} // Numero delle particelle
-      />
+    <div className="relative min-h-screen w-full bg-black text-white">
+      <div
+        className="fixed inset-0 pointer-events-none opacity-50 z-0"
+        style={{ height: "100vh" }}
+      >
+        <ParticlesBg
+          type="cobweb"
+          bg={true}
+          color="#ffffff"
+          num={120}
+        />
+      </div>
 
-      <style>{`
-        .particles-bg-canvas-self {
-          z-index: 0 !important; /* Forza z-index per le particelle */
-          opacity: 0.5;
-          height: 100vh !important;
-          position: fixed !important;
-          pointer-events: none;
-        }
-      `}</style>
-
-      <Hero/>
-
-      <Aboutme />
-      
-      <Skills/>
-
-      <Projects/>
-      
-      <Contacts/>
-     
+      <div className="relative z-10">
+        <Hero />
+        <Aboutme />
+        <Skills />
+        <Projects />
+        <Contacts />
+      </div>
     </div>
   );
 };
