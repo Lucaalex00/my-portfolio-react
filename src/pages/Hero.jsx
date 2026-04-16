@@ -1,95 +1,128 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
-
-const greetings = [
-  "Hi, I'm Luca Cirio",
-  "Welcome to my digital space!",
-  "Crafting code, building dreams.",
-  "Code. Create. Innovate.",
-];
-
-const TYPING_SPEED = 90;
-const DELETING_SPEED = 45;
-const PAUSE_TIME = 1400;
 
 const Hero = () => {
   const shouldReduceMotion = useReducedMotion();
-  const [index, setIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    if (shouldReduceMotion) {
-      setDisplayedText(greetings[0]);
-      return;
-    }
-
-    const currentText = greetings[index];
-    let timeout;
-
-    if (!isDeleting && displayedText.length < currentText.length) {
-      timeout = setTimeout(() => {
-        setDisplayedText(currentText.slice(0, displayedText.length + 1));
-      }, TYPING_SPEED);
-    } else if (!isDeleting && displayedText === currentText) {
-      timeout = setTimeout(() => {
-        setIsDeleting(true);
-      }, PAUSE_TIME);
-    } else if (isDeleting && displayedText.length > 0) {
-      timeout = setTimeout(() => {
-        setDisplayedText(displayedText.slice(0, -1));
-      }, DELETING_SPEED);
-    } else if (isDeleting && displayedText.length === 0) {
-      setIsDeleting(false);
-      setIndex((prev) => (prev + 1) % greetings.length);
-    }
-
-    return () => clearTimeout(timeout);
-  }, [displayedText, isDeleting, index, shouldReduceMotion]);
 
   return (
     <section
       id="hero"
       className="relative z-10 min-h-[100dvh] flex flex-col justify-center items-center text-center px-6"
     >
-      <div className="relative w-full max-w-[850px] min-h-[120px] flex items-center justify-center overflow-hidden border-b border-white/30 mb-6">
-        {!shouldReduceMotion && (
-          <motion.div
-            key={index}
-            initial={{ x: "-100%" }}
-            animate={{ x: "100%" }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="absolute inset-0 bg-white/10"
-          />
-        )}
+      <motion.div
+        className="flex flex-col items-center gap-5 max-w-3xl w-full"
+        initial={shouldReduceMotion ? {} : { opacity: 0, y: 28 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <span className="section-label">Portfolio</span>
 
-        <h1 className="relative z-10 text-2xl sm:text-3xl md:text-5xl font-mono tracking-tight">
-          {displayedText}
-          {!shouldReduceMotion && (
-            <span className="inline-block ml-1 animate-pulse">|</span>
-          )}
+        <h1
+          className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight"
+          style={{ fontFamily: "'Space Mono', monospace", lineHeight: 1.05, color: "var(--text-primary)" }}
+        >
+          Luca{" "}
+          <span
+            style={{
+              color: "var(--neon-cyan)",
+              textShadow: "0 0 32px var(--neon-cyan-glow)",
+            }}
+          >
+            Cirio
+          </span>
         </h1>
-      </div>
 
-      <p className="text-base sm:text-lg md:text-2xl text-white/80 max-w-[700px]">
-        Software Web Developer | Front-end & Back-end
-      </p>
-
-      <div className="mt-8 flex flex-wrap justify-center gap-4">
-        <a
-          href="#projects"
-          className="px-5 py-2.5 rounded-full border border-white text-white hover:bg-white hover:text-black transition duration-300"
+        <p
+          className="text-base sm:text-lg md:text-xl"
+          style={{
+            fontFamily: "'Space Mono', monospace",
+            color: "var(--text-muted)",
+            letterSpacing: "0.04em",
+          }}
         >
-          View Projects
-        </a>
+          Fullstack Developer — AI &amp; Agents Specialist
+        </p>
 
-        <a
-          href="#contacts"
-          className="px-5 py-2.5 rounded-full border border-white/40 text-white hover:border-white transition duration-300"
+        <div
+          className="w-16 h-px"
+          style={{
+            background: "linear-gradient(90deg, transparent, var(--neon-cyan), transparent)",
+          }}
+        />
+
+        <p
+          className="text-sm md:text-base max-w-lg"
+          style={{ color: "var(--text-muted)", lineHeight: 1.85 }}
         >
-          Contact Me
-        </a>
-      </div>
+          Building with code and AI — from enterprise logistics to digital
+          experiences. Currently shipping full Claude Code in production.
+        </p>
+
+        <div className="flex flex-wrap justify-center gap-4 mt-2">
+          <a
+            href="/Luca_Cirio_CV.pdf"
+            download
+            className="px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300"
+            style={{
+              fontFamily: "'Space Mono', monospace",
+              background: "var(--neon-cyan)",
+              color: "#08080f",
+              boxShadow: "0 0 24px var(--neon-cyan-glow)",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.boxShadow = "0 0 48px var(--neon-cyan-glow)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.boxShadow = "0 0 24px var(--neon-cyan-glow)")
+            }
+          >
+            Download CV
+          </a>
+
+          <a
+            href="#contacts"
+            className="px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300"
+            style={{
+              fontFamily: "'Space Mono', monospace",
+              border: "1px solid var(--border-glow)",
+              color: "var(--neon-cyan)",
+              background: "transparent",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "var(--neon-cyan-dim)";
+              e.currentTarget.style.borderColor = "var(--neon-cyan)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.borderColor = "var(--border-glow)";
+            }}
+          >
+            Contact Me
+          </a>
+        </div>
+      </motion.div>
+
+      {!shouldReduceMotion && (
+        <motion.div
+          className="absolute bottom-10 flex flex-col items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4, duration: 0.6 }}
+        >
+          <span className="section-label" style={{ fontSize: "0.62rem" }}>
+            Scroll
+          </span>
+          <motion.div
+            className="w-px h-10"
+            style={{
+              background:
+                "linear-gradient(180deg, var(--neon-cyan), transparent)",
+            }}
+            animate={{ scaleY: [0, 1, 0], originY: "top" }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+      )}
     </section>
   );
 };

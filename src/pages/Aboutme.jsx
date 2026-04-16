@@ -1,265 +1,139 @@
 import React, { useState } from "react";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  Box,
-  Stack,
-  Chip,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { motion, AnimatePresence } from "framer-motion";
+
+const tags = ["AI & Agents", "Enterprise Software", "Frontend Focus", "Continuous Growth"];
 
 const AboutMe = () => {
-  const [expanded, setExpanded] = useState("");
-
-  const handleChange = (panel) => (_, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  const [open1, setOpen1] = useState(true);
+  const [open2, setOpen2] = useState(false);
 
   return (
-    <section id="aboutme" className="relative z-10 py-20 px-6 md:px-10">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <Typography
-            variant="overline"
-            sx={{
-              letterSpacing: "0.25em",
-              color: "rgba(255,255,255,0.65)",
-              fontSize: "0.8rem",
-            }}
+    <section id="aboutme" className="relative z-10 py-24 px-6 md:px-10">
+      <div className="max-w-5xl mx-auto">
+        <motion.div
+          className="text-center mb-14"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="section-label mb-3">About</span>
+          <h2
+            className="text-4xl md:text-5xl font-bold mt-3 mb-4"
+            style={{ fontFamily: "'Space Mono', monospace", color: "var(--text-primary)", lineHeight: 1.1 }}
           >
-            ABOUT ME
-          </Typography>
+            A developer focused on
+            <br />
+            <span style={{ color: "var(--neon-cyan)" }}>impact and evolution</span>
+          </h2>
+          <p className="max-w-2xl mx-auto text-sm md:text-base" style={{ color: "var(--text-muted)", lineHeight: 1.85 }}>
+            Professional experience. Passion-driven depth. Currently shipping AI-powered enterprise software.
+          </p>
+          <div className="flex flex-wrap justify-center gap-2 mt-5">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="px-3 py-1 rounded-full text-xs font-medium"
+                style={{ fontFamily: "'Space Mono', monospace", border: "1px solid var(--border-glow)", color: "var(--neon-cyan)", background: "var(--neon-cyan-dim)" }}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </motion.div>
 
-          <Typography
-            variant="h3"
-            sx={{
-              color: "#fff",
-              fontWeight: 700,
-              mt: 1,
-              mb: 2,
-              fontSize: { xs: "2rem", md: "3rem" },
-              lineHeight: 1.1,
-            }}
-          >
-            A developer focused on impact, clarity and evolution
-          </Typography>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
 
-          <Typography
-            sx={{
-              maxWidth: "760px",
-              mx: "auto",
-              color: "rgba(255,255,255,0.72)",
-              fontSize: { xs: "0.98rem", md: "1.08rem" },
-              lineHeight: 1.8,
-            }}
+          {/* Panel 1 */}
+          <motion.div
+            className="cyber-card rounded-3xl overflow-hidden cursor-pointer"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0 }}
+            onClick={() => setOpen1((v) => !v)}
           >
-            I build digital experiences with a balance between clean design,
-            modern development and real functionality. My goal is not just to
-            create websites, but to deliver solutions that feel solid,
-            intuitive and valuable.
-          </Typography>
-
-          <Stack
-            direction="row"
-            spacing={1.2}
-            justifyContent="center"
-            useFlexGap
-            flexWrap="wrap"
-            sx={{ mt: 3 }}
-          >
-            <Chip
-              label="Modern Web Development"
-              sx={{
-                bgcolor: "rgba(255,255,255,0.08)",
-                color: "#fff",
-                border: "1px solid rgba(255,255,255,0.12)",
-              }}
-            />
-            <Chip
-              label="UI Focus"
-              sx={{
-                bgcolor: "rgba(255,255,255,0.08)",
-                color: "#fff",
-                border: "1px solid rgba(255,255,255,0.12)",
-              }}
-            />
-            <Chip
-              label="Continuous Learning"
-              sx={{
-                bgcolor: "rgba(255,255,255,0.08)",
-                color: "#fff",
-                border: "1px solid rgba(255,255,255,0.12)",
-              }}
-            />
-          </Stack>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-         <Box
-            sx={{
-              alignSelf: "start",
-              p: { xs: 0.5, md: 1 },
-              borderRadius: "24px",
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))",
-              border: "1px solid rgba(255,255,255,0.10)",
-              boxShadow: "0 16px 45px rgba(0,0,0,0.20)",
-            }}
-          >
-            <Accordion
-              disableGutters
-              elevation={0}
-              expanded={expanded === "panel1"}
-              onChange={handleChange("panel1")}
-              sx={{
-                bgcolor: "transparent",
-                color: "#fff",
-                borderRadius: "20px !important",
-                overflow: "hidden",
-                "&:before": { display: "none" },
+            <div
+              className="flex items-center justify-between px-6 py-4"
+              style={{
+                background: open1 ? "var(--neon-cyan-dim)" : "transparent",
+                borderBottom: open1 ? "1px solid var(--border-glow)" : "1px solid transparent",
+                transition: "all 0.3s ease",
               }}
             >
-              <AccordionSummary
-                expandIcon={
-                  <ExpandMoreIcon
-                    sx={{
-                      color: "white",
-                      transition: "transform 0.3s ease",
-                    }}
-                  />
-                }
-                sx={{
-                  px: 3,
-                  py: 1,
-                  bgcolor: expanded === "panel1"
-                    ? "rgba(255,255,255,0.08)"
-                    : "rgba(255,255,255,0.04)",
-                  transition: "background-color 0.3s ease",
-                  "& .MuiAccordionSummary-content": {
-                    my: 1.5,
-                  },
-                }}
-              >
-                <Typography
-                  sx={{
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: "1.05rem",
-                  }}
+              <span className="font-bold text-sm" style={{ fontFamily: "'Space Mono', monospace", color: "var(--text-primary)" }}>
+                ⚡ Professional Profile
+              </span>
+              <span style={{ color: "var(--neon-cyan)", fontFamily: "'Space Mono', monospace", fontSize: "1.1rem", lineHeight: 1 }}>
+                {open1 ? "−" : "+"}
+              </span>
+            </div>
+            <AnimatePresence initial={false}>
+              {open1 && (
+                <motion.div
+                  key="panel1-content"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  style={{ overflow: "hidden" }}
                 >
-                  📌 Professional Profile
-                </Typography>
-              </AccordionSummary>
+                  <p className="px-6 pb-6 pt-4 text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                    {`I'm a fullstack developer with a strong pull toward frontend and a growing interest in AI engineering. I spend a lot of time outside work hours pushing my limits — the gap between experience on paper and actual depth reflects that.
 
-              <AccordionDetails
-                sx={{
-                  px: 3,
-                  pb: 3,
-                  pt: 1,
-                  bgcolor: "transparent",
-                }}
-              >
-                <Typography
-                  sx={{
-                    color: "rgba(255,255,255,0.78)",
-                    lineHeight: 1.9,
-                    fontFamily: "Gidole",
-                  }}
-                >
-                  I am a web developer focused on modern technologies and on
-                  constant growth. I like building dynamic, interactive and
-                  well-structured digital products that combine usability,
-                  performance and visual consistency. I am particularly drawn to
-                  programming, artificial intelligence and everything related to
-                  the continuous evolution of the digital world.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          </Box>
+Right now I work as Software Developer at LeviaHub, a multinational logistics company, where I handle bug fixing and full developments on their existing system, I founded their internal administration portal, and I'm now frontend lead on a new project built entirely with Claude Code. Before that, I leveled up fast at ALTEN in Genova, where consulting-grade standards shaped the way I approach production software.
 
-         <Box
-            sx={{
-              alignSelf: "start",
-              p: { xs: 0.5, md: 1 },
-              borderRadius: "24px",
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))",
-              border: "1px solid rgba(255,255,255,0.10)",
-              boxShadow: "0 16px 45px rgba(0,0,0,0.20)",
-            }}
+My current focus: AI agents, MCP servers, and everything in the Anthropic ecosystem.`}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Panel 2 */}
+          <motion.div
+            className="cyber-card rounded-3xl overflow-hidden cursor-pointer"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            onClick={() => setOpen2((v) => !v)}
           >
-            <Accordion
-              disableGutters
-              elevation={0}
-              expanded={expanded === "panel2"}
-              onChange={handleChange("panel2")}
-              sx={{
-                bgcolor: "transparent",
-                color: "#fff",
-                borderRadius: "20px !important",
-                overflow: "hidden",
-                "&:before": { display: "none" },
+            <div
+              className="flex items-center justify-between px-6 py-4"
+              style={{
+                background: open2 ? "var(--neon-cyan-dim)" : "transparent",
+                borderBottom: open2 ? "1px solid var(--border-glow)" : "1px solid transparent",
+                transition: "all 0.3s ease",
               }}
             >
-              <AccordionSummary
-                expandIcon={
-                  <ExpandMoreIcon
-                    sx={{
-                      color: "white",
-                      transition: "transform 0.3s ease",
-                    }}
-                  />
-                }
-                sx={{
-                  px: 3,
-                  py: 1,
-                  bgcolor: expanded === "panel2"
-                    ? "rgba(255,255,255,0.08)"
-                    : "rgba(255,255,255,0.04)",
-                  transition: "background-color 0.3s ease",
-                  "& .MuiAccordionSummary-content": {
-                    my: 1.5,
-                  },
-                }}
-              >
-                <Typography
-                  sx={{
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: "1.05rem",
-                  }}
+              <span className="font-bold text-sm" style={{ fontFamily: "'Space Mono', monospace", color: "var(--text-primary)" }}>
+                🎧 Beyond Code
+              </span>
+              <span style={{ color: "var(--neon-cyan)", fontFamily: "'Space Mono', monospace", fontSize: "1.1rem", lineHeight: 1 }}>
+                {open2 ? "−" : "+"}
+              </span>
+            </div>
+            <AnimatePresence initial={false}>
+              {open2 && (
+                <motion.div
+                  key="panel2-content"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  style={{ overflow: "hidden" }}
                 >
-                  😊 Beyond Code
-                </Typography>
-              </AccordionSummary>
+                  <p className="px-6 pb-6 pt-4 text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                    {`Outside of work I'm into music, travel, and constantly challenging myself in new directions. I enjoy exploring ideas that sit at the edge of what's currently possible — technically or otherwise.
 
-              <AccordionDetails
-                sx={{
-                  px: 3,
-                  pb: 3,
-                  pt: 1,
-                  bgcolor: "transparent",
-                }}
-              >
-                <Typography
-                  sx={{
-                    color: "rgba(255,255,255,0.78)",
-                    lineHeight: 1.9,
-                    fontFamily: "Gidole",
-                  }}
-                >
-                  Beyond development, I enjoy travelling, music, discovering new
-                  ideas and challenging myself in different areas, from sport to
-                  personal projects. I consider curiosity one of the most useful
-                  qualities in both life and work. I also value communication
-                  and team energy, and I always try to bring a constructive,
-                  positive mindset into every collaboration.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          </Box>
+I believe curiosity is the most underrated professional skill. It's what turned a pandemic hobby into a career, and what keeps me moving into whatever frontier opens next. I bring that same constructive energy into every team I'm part of.`}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
         </div>
       </div>
     </section>
