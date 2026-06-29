@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-
-const NAV_LINKS = [
-  { id: "aboutme", label: "About" },
-  { id: "skills", label: "Skills" },
-  { id: "experience", label: "Experience" },
-  { id: "projects", label: "Projects" },
-  { id: "contacts", label: "Contact" },
-];
+import { navLinks } from "../data/navigation";
+import LanguageToggle from "./ui/LanguageToggle";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const NavbarComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const onScroll = () => {
@@ -24,9 +20,7 @@ const NavbarComponent = () => {
 
   useEffect(() => {
     const onClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
+      if (menuRef.current && !menuRef.current.contains(e.target)) setIsOpen(false);
     };
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
@@ -37,13 +31,29 @@ const NavbarComponent = () => {
     setIsOpen(false);
   };
 
+  const linkStyle = {
+    fontFamily: "var(--font-display)",
+    color: "var(--text-muted)",
+    background: "transparent",
+    border: "1px solid transparent",
+    cursor: "pointer",
+  };
+  const linkEnter = (e) => {
+    e.currentTarget.style.color = "var(--text-primary)";
+    e.currentTarget.style.background = "var(--accent-soft)";
+  };
+  const linkLeave = (e) => {
+    e.currentTarget.style.color = "var(--text-muted)";
+    e.currentTarget.style.background = "transparent";
+  };
+
   return (
     <>
       {/* Top bar — visible only at the very top */}
       <nav
         className="fixed top-0 left-0 right-0 z-40 transition-all duration-500"
         style={{
-          background: scrolled ? "transparent" : "rgba(8,8,15,0.75)",
+          background: scrolled ? "transparent" : "rgba(10,11,16,0.6)",
           backdropFilter: scrolled ? "none" : "blur(16px)",
           borderBottom: scrolled ? "none" : "1px solid var(--border-subtle)",
           pointerEvents: scrolled ? "none" : "auto",
@@ -55,54 +65,40 @@ const NavbarComponent = () => {
           <button
             onClick={() => scrollTo("hero")}
             className="font-bold text-lg"
-            style={{ fontFamily: "'Space Mono', monospace", color: "var(--neon-cyan)", background: "none", border: "none", cursor: "pointer" }}
+            style={{ fontFamily: "var(--font-display)", background: "none", border: "none", cursor: "pointer" }}
           >
-            LC
+            <span className="gradient-text">LC</span>
           </button>
 
-          <div className="hidden md:flex items-center gap-1">
-            {NAV_LINKS.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => scrollTo(link.id)}
-                className="px-4 py-2 rounded-full text-xs transition-all duration-200"
-                style={{
-                  fontFamily: "'Space Mono', monospace",
-                  color: "var(--text-muted)",
-                  background: "transparent",
-                  border: "1px solid transparent",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "var(--neon-cyan)";
-                  e.currentTarget.style.borderColor = "var(--border-glow)";
-                  e.currentTarget.style.background = "var(--neon-cyan-dim)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "var(--text-muted)";
-                  e.currentTarget.style.borderColor = "transparent";
-                  e.currentTarget.style.background = "transparent";
-                }}
-              >
-                {link.label}
-              </button>
-            ))}
+          <div className="flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-1">
+              {navLinks.map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => scrollTo(link.id)}
+                  className="px-4 py-2 rounded-full text-sm transition-all duration-200"
+                  style={linkStyle}
+                  onMouseEnter={linkEnter}
+                  onMouseLeave={linkLeave}
+                >
+                  {t(`nav.links.${link.id}`)}
+                </button>
+              ))}
+            </div>
+
+            <LanguageToggle />
+
+            <button
+              className="md:hidden w-9 h-9 flex flex-col items-center justify-center gap-1.5"
+              onClick={() => setIsOpen((o) => !o)}
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+              aria-label="Open menu"
+            >
+              {[0, 1, 2].map((i) => (
+                <span key={i} className="block h-px w-5" style={{ background: "var(--accent)" }} />
+              ))}
+            </button>
           </div>
-
-          {/* Mobile hamburger for top bar */}
-          <button
-            className="md:hidden w-9 h-9 flex flex-col items-center justify-center gap-1.5"
-            onClick={() => setIsOpen((o) => !o)}
-            style={{ background: "none", border: "none", cursor: "pointer" }}
-          >
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className="block h-px w-5 transition-all duration-300"
-                style={{ background: "var(--neon-cyan)" }}
-              />
-            ))}
-          </button>
         </div>
       </nav>
 
@@ -121,67 +117,54 @@ const NavbarComponent = () => {
         <div
           className="flex items-center gap-1 px-3 py-2 rounded-full"
           style={{
-            background: "rgba(8,8,15,0.92)",
-            border: "1px solid var(--border-glow)",
+            background: "rgba(16,18,25,0.85)",
+            border: "1px solid var(--border-subtle)",
             backdropFilter: "blur(20px)",
-            boxShadow: "0 0 30px rgba(0,245,212,0.06), 0 8px 32px rgba(0,0,0,0.5)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
           }}
         >
-          {/* Logo */}
           <button
             onClick={() => scrollTo("hero")}
             className="px-3 py-1 rounded-full text-xs font-bold mr-1"
             style={{
-              fontFamily: "'Space Mono', monospace",
-              color: "var(--neon-cyan)",
-              background: "var(--neon-cyan-dim)",
+              fontFamily: "var(--font-display)",
+              background: "var(--accent-soft)",
               border: "1px solid var(--border-glow)",
               cursor: "pointer",
             }}
           >
-            LC
+            <span className="gradient-text">LC</span>
           </button>
 
-          {/* Desktop links */}
           <div className="hidden md:flex items-center gap-1">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => scrollTo(link.id)}
-                className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
-                style={{
-                  fontFamily: "'Space Mono', monospace",
-                  color: "var(--text-muted)",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "var(--neon-cyan)";
-                  e.currentTarget.style.background = "var(--neon-cyan-dim)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "var(--text-muted)";
-                  e.currentTarget.style.background = "transparent";
-                }}
+                className="px-3 py-1.5 rounded-full text-sm transition-all duration-200"
+                style={{ ...linkStyle, border: "none" }}
+                onMouseEnter={linkEnter}
+                onMouseLeave={linkLeave}
               >
-                {link.label}
+                {t(`nav.links.${link.id}`)}
               </button>
             ))}
           </div>
 
-          {/* Mobile hamburger inside pill */}
+          <div className="ml-1 mr-0.5">
+            <LanguageToggle size="sm" />
+          </div>
+
           <button
             className="md:hidden w-8 h-8 flex flex-col items-center justify-center gap-1"
             onClick={() => setIsOpen((o) => !o)}
             style={{ background: "none", border: "none", cursor: "pointer" }}
+            aria-label="Toggle menu"
           >
             {isOpen ? (
-              <span style={{ color: "var(--neon-cyan)", fontFamily: "'Space Mono', monospace", fontSize: "1rem", lineHeight: 1 }}>×</span>
+              <span style={{ color: "var(--accent)", fontFamily: "var(--font-mono)", fontSize: "1rem", lineHeight: 1 }}>×</span>
             ) : (
-              [0, 1, 2].map((i) => (
-                <span key={i} className="block h-px w-4" style={{ background: "var(--neon-cyan)" }} />
-              ))
+              [0, 1, 2].map((i) => <span key={i} className="block h-px w-4" style={{ background: "var(--accent)" }} />)
             )}
           </button>
         </div>
@@ -193,28 +176,22 @@ const NavbarComponent = () => {
             style={{
               transform: "translateX(-50%)",
               minWidth: 180,
-              background: "rgba(8,8,15,0.96)",
-              border: "1px solid var(--border-glow)",
+              background: "rgba(16,18,25,0.96)",
+              border: "1px solid var(--border-subtle)",
               backdropFilter: "blur(20px)",
               boxShadow: "0 16px 48px rgba(0,0,0,0.5)",
             }}
           >
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => scrollTo(link.id)}
                 className="w-full px-6 py-2 text-sm text-center transition-all duration-200"
-                style={{
-                  fontFamily: "'Space Mono', monospace",
-                  color: "var(--text-muted)",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--neon-cyan)")}
+                style={{ fontFamily: "var(--font-display)", color: "var(--text-muted)", background: "transparent", border: "none", cursor: "pointer" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
               >
-                {link.label}
+                {t(`nav.links.${link.id}`)}
               </button>
             ))}
           </div>

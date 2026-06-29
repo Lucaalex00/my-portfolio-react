@@ -1,166 +1,164 @@
 import React, { useRef, useState } from "react";
 import emailjs from "emailjs-com";
+import { useLanguage } from "../i18n/LanguageContext";
+
+const inputClass = "w-full p-3 rounded-xl text-sm outline-none transition-colors duration-200";
+const inputStyle = {
+  background: "rgba(255,255,255,0.03)",
+  border: "1px solid var(--border-subtle)",
+  color: "var(--text-primary)",
+  fontFamily: "var(--font-body)",
+};
+const labelStyle = {
+  fontFamily: "var(--font-mono)",
+  color: "var(--text-faint)",
+  fontSize: "0.7rem",
+  letterSpacing: "0.12em",
+  textTransform: "uppercase",
+};
 
 const EmailJSComponent = () => {
-  const [isConfirmed, setIsConfirmed] = useState(false); // Confirmation state
-  const [confirmationCode, setConfirmationCode] = useState(''); // Generated confirmation code
-  const [userCode, setUserCode] = useState(''); // Code entered by the user
-  const [message, setMessage] = useState(''); // Feedback message
-  const [userEmail, setUserEmail] = useState(''); // Store user's email
-  const [userName, setUserName] = useState(''); // Store user's name
-  const [count, setCount] = useState(0); // Count to manage the confirmation state
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // Button disabled state
-  const form = useRef(); // Ref for the message form
+  const { t } = useLanguage();
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [confirmationCode, setConfirmationCode] = useState("");
+  const [userCode, setUserCode] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState(null); // "success" | "error"
+  const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [count, setCount] = useState(0);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const form = useRef();
 
-  // Function to send the confirmation email
+  const notify = (key, ok) => {
+    setMessage(t(`form.messages.${key}`));
+    setStatus(ok ? "success" : "error");
+  };
+
   const sendConfirmationEmail = (e) => {
     e.preventDefault();
-
-    // Generate a confirmation code
     const generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
     setConfirmationCode(generatedCode);
-
-    // Store the user's email and name
     setUserEmail(e.target.user_email.value);
     setUserName(e.target.from_name.value);
 
     const templateParams = {
       from_name: e.target.from_name.value,
       user_email: e.target.user_email.value,
-      confirmation_code: generatedCode, // Include the confirmation code
+      confirmation_code: generatedCode,
     };
 
-    emailjs.send('service_6lwbh8d', 'template_j4ucpnr', templateParams, 'vYzCrWSpVoegMPEj7')
-      .then(() => {
-        setMessage('A confirmation email has been sent. Please check your inbox and enter the code to confirm.');
-      })
-      .catch(() => {
-        setMessage('Failed to send confirmation email');
-      });
-
-    e.target.reset(); // Reset the form after sending confirmation
-  };
-
-  // Function to verify the confirmation code entered by the user
-  const verifyConfirmationCode = () => {
-    if (userCode === confirmationCode && userCode.length !== 0) {
-      setIsConfirmed(true);
-      setMessage('Email confirmed successfully! Now you can send your message.');
-    } else {
-      setMessage('Incorrect confirmation code. Please try again.');
-    }
-  };
-
-  // Function to send the final message after confirmation
-  const sendEmail = (e) => {
-    e.preventDefault();
-
-    if (!isConfirmed) {
-      setMessage('Please confirm your email first.');
-      return;
-    }
-
-    const currentDate = new Date().toLocaleString(); // Get the current date and time
-    const templateParams = {
-      from_name: userName, // Use the stored name
-      user_email: userEmail, // Use the stored email
-      message: form.current.message.value,
-      date: currentDate, // Include the current date and time
-    };
-
-    setCount(1); // Set count to 1 to disable the textarea and button
-    setIsButtonDisabled(true); // Disable the button
-    emailjs.send('service_6lwbh8d', 'template_t5booah', templateParams, 'vYzCrWSpVoegMPEj7')
-      .then((result) => {
-        console.log(result.text);
-        setMessage('Your message has been sent successfully!');
-
-        setTimeout(() => window.location.reload(), 3000); // Redirect to home page after 3 seconds
-      })
-      .catch((error) => {
-        console.log(error.text);
-        setMessage('Failed to send your message.');
-      });
+    emailjs
+      .send("service_6lwbh8d", "template_j4ucpnr", templateParams, "vYzCrWSpVoegMPEj7")
+      .then(() => notify("confirmSent", true))
+      .catch(() => notify("confirmFail", false));
 
     e.target.reset();
   };
 
+  const verifyConfirmationCode = () => {
+    if (userCode === confirmationCode && userCode.length !== 0) {
+      setIsConfirmed(true);
+      notify("confirmedOk", true);
+    } else {
+      notify("codeWrong", false);
+    }
+  };
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    if (!isConfirmed) {
+      notify("confirmFirst", false);
+      return;
+    }
+
+    const currentDate = new Date().toLocaleString();
+    const templateParams = {
+      from_name: userName,
+      user_email: userEmail,
+      message: form.current.message.value,
+      date: currentDate,
+    };
+
+    setCount(1);
+    setIsButtonDisabled(true);
+    emailjs
+      .send("service_6lwbh8d", "template_t5booah", templateParams, "vYzCrWSpVoegMPEj7")
+      .then(() => {
+        notify("sentOk", true);
+        setTimeout(() => window.location.reload(), 3000);
+      })
+      .catch(() => notify("sendFail", false));
+
+    e.target.reset();
+  };
+
+  const onFocus = (e) => (e.currentTarget.style.borderColor = "var(--border-glow)");
+  const onBlur = (e) => (e.currentTarget.style.borderColor = "var(--border-subtle)");
+
   return (
-    <div className="w-1/2 mx-auto">
+    <div className="w-full max-w-md mx-auto">
       {!isConfirmed ? (
         <form onSubmit={sendConfirmationEmail} className="space-y-4">
-          <div>
-            <label className="block text-gray-300">Name</label>
-            <input
-              type="text"
-              name="from_name"
-              className="w-full z-10 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-              placeholder="Your Name"
-              required
-            />
+          <div className="space-y-1.5">
+            <label className="block" style={labelStyle}>{t("form.name")}</label>
+            <input type="text" name="from_name" className={inputClass} style={inputStyle} placeholder={t("form.placeholders.name")} required onFocus={onFocus} onBlur={onBlur} />
           </div>
-          <div>
-            <label className="block text-gray-300">Email</label>
-            <input
-              type="email"
-              name="user_email"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-              placeholder="Your Email"
-              required
-            />
+          <div className="space-y-1.5">
+            <label className="block" style={labelStyle}>{t("form.email")}</label>
+            <input type="email" name="user_email" className={inputClass} style={inputStyle} placeholder={t("form.placeholders.email")} required onFocus={onFocus} onBlur={onBlur} />
           </div>
-          <button
-            type="submit"
-            className="w-full cursor-pointer bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300"
-          >
-            Send Confirmation Email
+          <button type="submit" className="btn-primary w-full p-3 rounded-xl text-sm cursor-pointer">
+            {t("form.sendConfirm")}
           </button>
         </form>
       ) : (
         <form ref={form} onSubmit={sendEmail} className="space-y-4">
-          <div>
-            <label className="block text-gray-300">Message</label>
+          <div className="space-y-1.5">
+            <label className="block" style={labelStyle}>{t("form.message")}</label>
             <textarea
               name="message"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-              placeholder="Your Message"
+              className={inputClass}
+              style={{ ...inputStyle, resize: "vertical" }}
+              placeholder={t("form.placeholders.message")}
               rows="4"
               required
-              disabled={count === 1 || isButtonDisabled} // Disable the textarea if count is 1 or button is disabled
-            ></textarea>
+              disabled={count === 1 || isButtonDisabled}
+              onFocus={onFocus}
+              onBlur={onBlur}
+            />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 cursor-pointer text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300"
-            disabled={isButtonDisabled} // Disable the button if it is disabled
-          >
-            Send Message
+          <button type="submit" className="btn-primary w-full p-3 rounded-xl text-sm cursor-pointer" disabled={isButtonDisabled}>
+            {t("form.send")}
           </button>
         </form>
       )}
 
       {!isConfirmed && (
-        <div className="mt-4">
-          <label className="block text-gray-300">Confirmation Code</label>
+        <div className="mt-4 space-y-1.5">
+          <label className="block" style={labelStyle}>{t("form.code")}</label>
           <input
             type="text"
             value={userCode}
             onChange={(e) => setUserCode(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-            placeholder="Enter the confirmation code"
+            className={inputClass}
+            style={inputStyle}
+            placeholder={t("form.placeholders.code")}
             required
+            onFocus={onFocus}
+            onBlur={onBlur}
           />
-          <button
-            onClick={verifyConfirmationCode}
-            className="w-full bg-green-500 cursor-pointer text-white p-2 rounded-lg hover:bg-green-600 transition duration-300 mt-4"
-          >
-            Verify Code
+          <button onClick={verifyConfirmationCode} className="btn-ghost w-full p-3 rounded-xl text-sm cursor-pointer mt-2">
+            {t("form.verify")}
           </button>
         </div>
       )}
 
       {message && (
-        <p className={`mt-4 text-lg font-semibold ${message.includes("success") ? "text-green-500" : "text-red-500"}`}>
+        <p
+          className="mt-4 text-sm font-semibold text-center"
+          style={{ color: status === "success" ? "var(--accent-2)" : "var(--neon-pink)" }}
+        >
           {message}
         </p>
       )}
